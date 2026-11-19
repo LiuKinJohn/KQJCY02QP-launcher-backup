@@ -1,8 +1,8 @@
-# 米家空气检测仪 KQJCY02QP · 自建 Launcher
+# 米家空气检测仪 KQJCY02QP · 自建 LauncherOS
 
-这是一台米家空气检测仪 KQJCY02QP 上实测运行的自建 Launcher。仓库保存当前 `r20261110-6` 的源码、自建 ARM 二进制与启动监护脚本，供开发、核对和版本留存。原厂系统仍在设备上，Launcher 通过末段启动服务接管界面；启动失败时由监护脚本回退原厂界面。
+这是一台米家空气检测仪 KQJCY02QP 上实测运行的自建 Launcher。仓库保存的是当前 `r20261110-6` 的源码、自建 ARM 二进制与启动监护脚本，供开发、核对和版本留存。Launcher 通过末段启动服务接管界面；启动失败时由监护脚本回退原厂界面。
 
-**公开仓库不是可直接刷写的整机固件包。** 原厂 `BranOS`、米兰亭字体、由字体生成的图集、设备配置、API Key、Wi-Fi 凭据及原始 NAND 分区镜像均未上传。完整设备专属备份保存在本机；恢复时必须从可信本地备份补齐资源，并核对目标设备的分区与启动环境。
+**公开仓库不是可直接刷写的整机固件包。** 恢复时必须从可信本地备份补齐资源，并核对目标设备的分区与启动环境。
 
 ## 设备概况
 
@@ -13,11 +13,11 @@
 | 内存 | 251,868 KiB，约 246 MiB；无 swap |
 | 系统 | Tina Linux，Linux 3.4.39，BusyBox 1.24.1 |
 | 屏幕 | 800 × 480 横屏逻辑画布；面板帧缓冲 480 × 800，32 bpp，双缓冲 |
-| 触摸 | FocalTech `fts_ts`，`/dev/input/event1`，多点触摸事件 |
+| 触摸 | FocalTech `fts_ts`，`/dev/input/event1`，多点触摸事件支持 |
 | 存储 | NAND 分区含只读 rootfs、ext4 overlay、约 68 MiB UDISK；Launcher 版本包位于 UDISK |
 | 显示与网络 | `/dev/fb0` 帧缓冲、`/dev/disp`、`/dev/mali`；Wi-Fi |
 
-Launcher 读取 SHTC3 温湿度、光照、TVOC 与 PM2.5。PM2.5 来自 `/dev/ttyS3` 的传感器帧，使用原厂校准系数；空气质量 AQI 由 PM2.5 估算。电池与供电状态来自 Linux `power_supply`。这些读数已做原厂数据路径的内部核对，**没有独立标准仪器的绝对精度认证**。
+Launcher 读取 SHTC3 温湿度、光照、TVOC 与 PM2.5。PM2.5 来自 `/dev/ttyS3` 的传感器帧，使用原厂校准系数；空气质量 AQI 由 PM2.5 估算，原厂eCO2通过基于TVOC和其它多项数据合并计算而来，还没完全搞定。电池与供电状态来自 Linux `power_supply`。这些读数已做原厂数据路径的内部核对。
 
 ## 当前功能
 
@@ -35,12 +35,12 @@ Launcher 读取 SHTC3 温湿度、光照、TVOC 与 PM2.5。PM2.5 来自 `/dev/t
 
 ## 构建与运行边界
 
-项目使用 Zig 0.13 的 `zig cc` 交叉编译为 `arm-linux-musleabihf` 静态程序：
+项目使用 Zig 0.13 的 `zig cc` 交叉编译为 `arm-linux-musleabihf` 的静态程序：
 
 ```sh
 zig cc -target arm-linux-musleabihf -mcpu=cortex_a7 -static -O2 -o launcher src/launcher.c -lm
 ```
 
-设备端运行还需要原厂程序的可靠副本和对应字体图集，监护脚本会按设备的版本包清单验证它们。不要直接用此仓库覆盖 bootloader、内核或原厂 rootfs。完整 24 小时与 30 天历史覆盖尚待自然运行积累；目前已验证短期真实数据的保存、重启读回与图表交互。
+拉取时，设备端运行还需要原厂程序的可靠副本和对应字体图集，监护脚本会按设备的版本包清单验证它们。不要直接用此仓库覆盖 bootloader、内核或原厂 rootfs。目前使用ai工具，已验证短期真实/填充数据的保存、重启读回与图表交互。
 
-仓库中的 GNOME symbolic 图标原始文件保留了其 LGPL 文本。其他第三方字体和原厂程序均未收录。
+仓库中的 GNOME symbolic 图标原始文件保留了其 LGPL 文本。其他第三方字体、原厂程序、标识不做收录。
