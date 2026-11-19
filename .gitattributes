@@ -1,0 +1,11 @@
+# Keep executable scripts and device checksum list byte-for-byte usable after checkout.
+*.sh text eol=lf
+*.init text eol=lf
+manifest.md5 text eol=lf
+*.c text eol=lf
+*.h text eol=lf
+*.py text eol=lf
+*.bin binary
+*.ttf binary
+release/**/launcher binary
+release/**/BranOS binary

@@ -1,0 +1,17 @@
+# This repository is an allowlisted backup. Keep runtime secrets and scratch files out.
+config.ini
+*.key
+*.pem.tmp
+history-v1.bin
+tvoc-baseline*
+*.log
+*.raw
+*.candidate
+zigcache/
+.zig-cache/
+backups/
+diagnostics/
+BranOS
+atlas.bin
+src/fonts/
+*.img
